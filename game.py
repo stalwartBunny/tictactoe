@@ -31,7 +31,7 @@ class TTT():
     def winner(self, square, letter):
         row_ind = math.floor(square / 3)
         row = self.board[row_ind * 3:(row_ind + 1) * 3]
-        if all ([s == letter for s in row])
+        if all([s == letter for s in row])
             return True
 
         col_ind = square % 3
@@ -42,3 +42,54 @@ class TTT():
         diagonal1 = [self.board[i] for i in [0, 4, 8]]
         if all([s == letter for s in diagonal1]):
             return True
+
+        diagonal2 = [self.board[i] for i in [2, 4, 6]]
+        if all([s == letter for s in diagonal1]):
+            return True
+        return False
+
+    def squares_empty(self):
+        return ' ' in self.board
+
+    def number_of_empty_squares(self):
+        return self.board.count(' ')
+
+    def available_moves(self):
+        return [i for i, x in enumberate(self.board) if x == ' ']
+
+
+def play(game, x_player, o_player, print_game = True):
+    if print_game:
+        game.print_board_numbers()
+
+    letter = 'X'
+
+    while game.squares_empty():
+        if letter == 'O':
+            square = o_player.get_move(game)
+
+        else square = x_player.get_move(game)
+
+        if game.make_move(square, letter):
+            if print_game:
+                print(letter + ' makes a move to {}'.format(square))
+                game.print_board()
+                print('')
+
+            if game.current_winner:
+                if print_game:
+                    print(letter + " wins the game!")
+
+                return letter
+            letter = 'O' if letter == 'X' else "X"
+
+        time.sleep(.8)
+
+    if print_game:
+        print('Players have tied!')
+
+if __name__  == '__main__':
+    x_player = SmartComputerPlayer('X')
+    o_player = HumanPlayer('O')
+    t = TTT()
+    play(t, x_player, o_player, print_game = True)
